@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Solis",
+    "slug": "solis-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "solis",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#000000",
+    "plugins": ["expo-router", "expo-font", "expo-system-ui"],
+    "android": {
+      "package": "com.solis.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#000000"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
