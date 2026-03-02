@@ -3,8 +3,6 @@
 
 Native trading app for tokenized assets — Bitcoin wrappers, stablecoins, and tokenized stocks. Self-custody, 24/7, built for Solana Mobile.
 
-**Monolith Hackathon Submission** — Deadline March 9, 2026
-
 ---
 
 ## What It Does
