@@ -1,5 +1,8 @@
-// Macro market data for the scrolling ticker
-// Uses free Yahoo Finance API for traditional markets + Jupiter for crypto
+// ═══════════════════════════════════════════════════════════
+// MACRO MARKET DATA SERVICE
+// ═══════════════════════════════════════════════════════════
+// Consumer: index.tsx
+//   import { getMacroData, getFearGreedIndex, getBtcDominance, type MacroDataPoint } from "../../services/macroData";
 
 export type MacroDataPoint = {
   label: string;
@@ -9,7 +12,9 @@ export type MacroDataPoint = {
 };
 
 // Yahoo Finance chart API (free, no key)
-async function fetchYahooQuote(symbol: string): Promise<{ price: number; change: number } | null> {
+async function fetchYahooQuote(
+  symbol: string
+): Promise<{ price: number; change: number } | null> {
   try {
     const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
     const res = await fetch(url);
@@ -19,8 +24,10 @@ async function fetchYahooQuote(symbol: string): Promise<{ price: number; change:
     if (!meta) return null;
 
     const price = meta.regularMarketPrice || 0;
-    const prevClose = meta.chartPreviousClose || meta.previousClose || price;
-    const changePct = prevClose > 0 ? ((price - prevClose) / prevClose) * 100 : 0;
+    const prevClose =
+      meta.chartPreviousClose || meta.previousClose || price;
+    const changePct =
+      prevClose > 0 ? ((price - prevClose) / prevClose) * 100 : 0;
 
     return { price, change: changePct };
   } catch {
@@ -29,7 +36,7 @@ async function fetchYahooQuote(symbol: string): Promise<{ price: number; change:
 }
 
 /**
- * Fetch all macro indicators for the ticker
+ * Fetch all macro indicators for the scrolling ticker.
  */
 export async function getMacroData(): Promise<MacroDataPoint[]> {
   const symbols = [
@@ -42,8 +49,6 @@ export async function getMacroData(): Promise<MacroDataPoint[]> {
   ];
 
   const results: MacroDataPoint[] = [];
-
-  // Fetch all in parallel
   const promises = symbols.map((s) => fetchYahooQuote(s.yahoo));
   const responses = await Promise.all(promises);
 
@@ -55,7 +60,13 @@ export async function getMacroData(): Promise<MacroDataPoint[]> {
       const valueStr =
         s.format === "percent"
           ? `${data.price.toFixed(2)}%`
-          : `$${data.price >= 1000 ? data.price.toLocaleString("en-US", { maximumFractionDigits: 0 }) : data.price.toFixed(2)}`;
+          : `$${
+              data.price >= 1000
+                ? data.price.toLocaleString("en-US", {
+                    maximumFractionDigits: 0,
+                  })
+                : data.price.toFixed(2)
+            }`;
 
       results.push({
         label: s.label,
@@ -64,20 +75,20 @@ export async function getMacroData(): Promise<MacroDataPoint[]> {
         up: data.change >= 0,
       });
     } else {
-      results.push({
-        label: s.label,
-        value: "--",
-        change: "--",
-        up: true,
-      });
+      results.push({ label: s.label, value: "--", change: "--", up: true });
     }
   }
 
   return results;
 }
 
-// Fear & Greed Index (alternative.me free API)
-export async function getFearGreedIndex(): Promise<{ value: number; label: string } | null> {
+/**
+ * Fear & Greed Index (alternative.me free API)
+ */
+export async function getFearGreedIndex(): Promise<{
+  value: number;
+  label: string;
+} | null> {
   try {
     const res = await fetch("https://api.alternative.me/fng/");
     if (!res.ok) return null;
@@ -91,7 +102,9 @@ export async function getFearGreedIndex(): Promise<{ value: number; label: strin
   }
 }
 
-// BTC Dominance from CoinGecko
+/**
+ * BTC Dominance from CoinGecko
+ */
 export async function getBtcDominance(): Promise<number | null> {
   try {
     const res = await fetch("https://api.coingecko.com/api/v3/global");
@@ -103,7 +116,9 @@ export async function getBtcDominance(): Promise<number | null> {
   }
 }
 
-// Stablecoin market cap percentage
+/**
+ * Stablecoin market cap percentage
+ */
 export async function getStablecoinDominance(): Promise<number | null> {
   try {
     const res = await fetch("https://api.coingecko.com/api/v3/global");

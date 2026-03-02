@@ -7,15 +7,24 @@
     "scheme": "solis",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#000000",
-    "plugins": ["expo-router", "expo-font", "expo-system-ui"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-system-ui",
+      "expo-dev-client"
+    ],
     "android": {
       "package": "com.solis.mobile",
+      "newArchEnabled": false,
       "adaptiveIcon": {
         "backgroundColor": "#000000"
       }
     },
     "web": {
       "bundler": "metro"
+    },
+    "ios": {
+      "bundleIdentifier": "com.solis.mobile"
     }
   }
 }

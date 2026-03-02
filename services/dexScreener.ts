@@ -1,86 +1,81 @@
-const DEXSCREENER_URL = "https://api.dexscreener.com/latest/dex/tokens";
+// ═══════════════════════════════════════════════════════════
+// DEXSCREENER MARKET DATA SERVICE
+// ═══════════════════════════════════════════════════════════
+// Consumer: asset detail pages (future)
 
-export type DexMarketData = {
-  price: number;
+import { SOLIS_CONFIG } from "./config";
+
+export interface MarketData {
+  price: string;
   priceChange24h: number;
   volume24h: number;
   liquidity: number;
-  fdv: number | null;
-  pairAddress?: string;
-};
-
-/**
- * Fetch market data for a token from DexScreener
- */
-export async function getMarketData(mint: string): Promise<DexMarketData | null> {
-  try {
-    const res = await fetch(`${DEXSCREENER_URL}/${mint}`);
-    if (!res.ok) return null;
-    const data = await res.json();
-
-    // Get the highest-liquidity Solana pair
-    const pairs = data?.pairs?.filter((p: any) => p.chainId === "solana") || [];
-    if (pairs.length === 0) return null;
-
-    const best = pairs.sort((a: any, b: any) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0))[0];
-
-    return {
-      price: parseFloat(best.priceUsd) || 0,
-      priceChange24h: best.priceChange?.h24 || 0,
-      volume24h: best.volume?.h24 || 0,
-      liquidity: best.liquidity?.usd || 0,
-      fdv: best.fdv || null,
-      pairAddress: best.pairAddress,
-    };
-  } catch (err) {
-    console.error("[DexScreener] Error:", err);
-    return null;
-  }
+  totalLiquidity: number;
+  totalVolume: number;
+  allPairs: MarketPair[];
+  supply: number | null;
 }
 
-/**
- * Fetch market data for multiple tokens
- */
-export async function getBatchMarketData(
-  mints: string[]
-): Promise<Record<string, DexMarketData>> {
-  const results: Record<string, DexMarketData> = {};
+export interface MarketPair {
+  dex: string;
+  baseToken: string;
+  quoteToken: string;
+  liquidity: number;
+  volume24h: number;
+  url: string;
+}
 
-  // DexScreener supports batch by comma-separated (up to ~30)
-  const batchSize = 25;
-  for (let i = 0; i < mints.length; i += batchSize) {
-    const batch = mints.slice(i, i + batchSize);
-    try {
-      const res = await fetch(`${DEXSCREENER_URL}/${batch.join(",")}`);
-      if (!res.ok) continue;
-      const data = await res.json();
-      const pairs = data?.pairs?.filter((p: any) => p.chainId === "solana") || [];
+export async function getMarketData(
+  mint: string
+): Promise<MarketData | null> {
+  try {
+    const res = await fetch(
+      `${SOLIS_CONFIG.DEXSCREENER_API_URL}/tokens/${mint}`
+    );
+    if (!res.ok) return null;
 
-      for (const mint of batch) {
-        const tokenPairs = pairs.filter(
-          (p: any) =>
-            p.baseToken?.address === mint || p.quoteToken?.address === mint
-        );
-        if (tokenPairs.length === 0) continue;
+    const json = await res.json();
+    const pairs = json.pairs || [];
+    if (pairs.length === 0) return null;
 
-        const best = tokenPairs.sort(
-          (a: any, b: any) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0)
-        )[0];
+    const sorted = [...pairs].sort(
+      (a: any, b: any) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0)
+    );
+    const primary = sorted[0];
 
-        const isBase = best.baseToken?.address === mint;
-        results[mint] = {
-          price: parseFloat(isBase ? best.priceUsd : (1 / parseFloat(best.priceUsd)).toString()) || 0,
-          priceChange24h: best.priceChange?.h24 || 0,
-          volume24h: best.volume?.h24 || 0,
-          liquidity: best.liquidity?.usd || 0,
-          fdv: best.fdv || null,
-          pairAddress: best.pairAddress,
-        };
-      }
-    } catch (err) {
-      console.error("[DexScreener] Batch error:", err);
-    }
+    const allPairs: MarketPair[] = sorted.map((p: any) => ({
+      dex: p.dexId || "unknown",
+      baseToken: p.baseToken?.symbol || "?",
+      quoteToken: p.quoteToken?.symbol || "?",
+      liquidity: p.liquidity?.usd || 0,
+      volume24h: p.volume?.h24 || 0,
+      url: p.url || "",
+    }));
+
+    const totalLiquidity = sorted.reduce(
+      (sum: number, p: any) => sum + (p.liquidity?.usd || 0),
+      0
+    );
+    const totalVolume = sorted.reduce(
+      (sum: number, p: any) => sum + (p.volume?.h24 || 0),
+      0
+    );
+
+    return {
+      price: primary.priceUsd || "0",
+      priceChange24h: primary.priceChange?.h24 || 0,
+      volume24h: primary.volume?.h24 || 0,
+      liquidity: primary.liquidity?.usd || 0,
+      totalLiquidity,
+      totalVolume,
+      allPairs,
+      supply:
+        primary.fdv && primary.priceUsd
+          ? primary.fdv / parseFloat(primary.priceUsd)
+          : null,
+    };
+  } catch (err) {
+    console.warn("[DexScreener] Failed for", mint, err);
+    return null;
   }
-
-  return results;
 }

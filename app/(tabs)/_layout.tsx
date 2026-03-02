@@ -2,12 +2,20 @@ import { Tabs } from "expo-router";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+const C = {
+  bg: "#0a0a0a",
+  border: "#1A1A1A",
+  accent: "#BDFF00",
+  muted: "rgba(255,255,255,0.25)",
+  white: "#FFFFFF",
+};
+
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const insets = useSafeAreaInsets();
 
   const tabs = [
     { name: "index", label: "MARKETS", icon: "◇" },
-    { name: "stake", label: "STAKE", icon: "◈" },
+    { name: "earn", label: "EARN", icon: "◈" },
     { name: "swap", label: "SWAP", icon: "⇄" },
     { name: "more", label: "MORE", icon: "⋯" },
   ];
@@ -32,14 +40,14 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           <Pressable key={route.key} onPress={onPress} style={styles.tabItem}>
             {isSwap ? (
               <View style={styles.swapButton}>
-                <Text style={{ color: "#fff", fontSize: 16 }}>{tabConfig.icon}</Text>
+                <Text style={{ color: "#000", fontSize: 16 }}>{tabConfig.icon}</Text>
               </View>
             ) : (
               <View style={styles.iconWrap}>
-                <Text style={{ color: isFocused ? "#fff" : "#555", fontSize: 18 }}>{tabConfig.icon}</Text>
+                <Text style={{ color: isFocused ? C.accent : C.muted, fontSize: 18 }}>{tabConfig.icon}</Text>
               </View>
             )}
-            <Text style={[styles.tabLabel, { color: isSwap ? "#fff" : isFocused ? "#fff" : "#555" }]}>
+            <Text style={[styles.tabLabel, { color: isSwap ? C.accent : isFocused ? C.accent : C.muted }]}>
               {tabConfig.label}
             </Text>
           </Pressable>
@@ -52,14 +60,14 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
 export default function TabLayout() {
   return (
     <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
+      tabBar={(props: any) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
         sceneStyle: { backgroundColor: "#000" },
       }}
     >
       <Tabs.Screen name="index" />
-      <Tabs.Screen name="stake" />
+      <Tabs.Screen name="earn" />
       <Tabs.Screen name="swap" />
       <Tabs.Screen name="more" />
     </Tabs>
@@ -68,9 +76,9 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: "#0a0a0a",
+    backgroundColor: C.bg,
     borderTopWidth: 1,
-    borderTopColor: "#1a1a1a",
+    borderTopColor: C.border,
     flexDirection: "row",
     alignItems: "flex-start",
     paddingTop: 12,
@@ -89,14 +97,15 @@ const styles = StyleSheet.create({
   swapButton: {
     width: 36,
     height: 36,
-    borderRadius: 18,
     borderWidth: 1.5,
-    borderColor: "#fff",
+    borderColor: C.accent,
+    backgroundColor: C.accent,
     alignItems: "center",
     justifyContent: "center",
   },
   tabLabel: {
+    fontFamily: "InterSemiBold",
     fontSize: 8,
-    letterSpacing: 0.5,
+    letterSpacing: 1,
   },
 });
