@@ -72,10 +72,10 @@ export function getAssetBySymbol(symbol: string) {
 }
 
 export const SOLIS_CONFIG = {
-  JUPITER_API_KEY: "8b7d0011-2e6b-47b6-a597-2e2e36100f47",
-  HELIUS_API_KEY: "ee6c2238-42f8-4582-b9e5-3180f450b998",
-  HELIUS_RPC_URL: "https://mainnet.helius-rpc.com/?api-key=ee6c2238-42f8-4582-b9e5-3180f450b998",
-  DEXSCREENER_API_URL: "https://api.dexscreener.com/latest/dex",
+  JUPITER_API_KEY: process.env.EXPO_PUBLIC_JUPITER_API_KEY ?? "",
+  HELIUS_API_KEY: process.env.EXPO_PUBLIC_HELIUS_API_KEY ?? "",
+  HELIUS_RPC_URL: `https://mainnet.helius-rpc.com/?api-key=${process.env.EXPO_PUBLIC_HELIUS_API_KEY ?? ""}`,
+  DEXSCREENER_API: "https://api.dexscreener.com/latest/dex",
   JUPITER_PRICE_API: "https://api.jup.ag/price/v2",
   JUPITER_QUOTE_API: "https://api.jup.ag/swap/v1/quote",
   PYTH_PRICE_SERVICE: "https://hermes.pyth.network/v2/updates/price/latest",

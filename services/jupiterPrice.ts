@@ -68,7 +68,7 @@ export async function getTokenPrices(): Promise<Record<string, number>> {
     const fetches = missing.map(async (asset) => {
       try {
         const r = await fetch(
-          `${SOLIS_CONFIG.DEXSCREENER_API_URL}/tokens/${asset.mint}`
+          `${SOLIS_CONFIG.DEXSCREENER_API}/tokens/${asset.mint}`
         );
         if (!r.ok) return;
         const j = await r.json();

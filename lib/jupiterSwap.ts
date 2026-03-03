@@ -10,19 +10,18 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { Buffer } from "buffer";
+import { SOLIS_CONFIG, RPC_ENDPOINTS } from "../services/config";
 
 // ─── Config ────────────────────────────────────────────────
-const JUPITER_SWAP_KEY = "8b7d0011-2e6b-47b6-a597-2e2e36100f47";
-const FEE_WALLET = "EMp2t1K5Du4sQLA5v2YGKfCWjsLE2T5eNbhYjGGLRcLo";
-const HELIUS_RPC = "https://mainnet.helius-rpc.com/?api-key=ee6c2238-42f8-4582-b9e5-3180f450b998";
-
+const JUPITER_SWAP_KEY = SOLIS_CONFIG.JUPITER_API_KEY;
+const FEE_WALLET = SOLIS_CONFIG.FEE_WALLET;
 // SOL native mint — can't collect platform fees on native SOL output
 const SOL_MINT = "So11111111111111111111111111111111111111112";
 
-const QUOTE_URL = "https://api.jup.ag/swap/v1/quote";
+const QUOTE_URL = SOLIS_CONFIG.JUPITER_QUOTE_API;
 const SWAP_URL = "https://api.jup.ag/swap/v1/swap";
 
-const connection = new Connection(HELIUS_RPC, "confirmed");
+const connection = new Connection(RPC_ENDPOINTS.HELIUS, "confirmed");
 const feeWalletPubkey = new PublicKey(FEE_WALLET);
 
 // ─── ATA Cache ─────────────────────────────────────────────
