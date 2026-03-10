@@ -72,7 +72,6 @@ PrivacyCash integration on the web platform. groth16 ZK proofs generated in-brow
 ### Brand V2 Design System
 - #BDFF00 Solar Green accent, Inter + Space Grotesk typography
 - Sharp corners, flat black palette, purple reserved for Shadow branding
-- Dopamine triggers: count-up animations, live pulse dot, staggered entrance animations
 
 ---
 
