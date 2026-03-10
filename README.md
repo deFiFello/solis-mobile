@@ -1,241 +1,199 @@
-# SOLIS — 24/7 Capital Markets
+# SOLIS MOBILE
 
-> Tokenized markets. Real assets. Your custody.
+**24/7 Capital Markets on Solana Mobile**
 
-Solis is a trading platform for tokenized assets on Solana — Bitcoin wrappers, stablecoins, and soon stocks, metals, and commodities. All 24/7, all self-custody, with optional ZK-shielded swaps via PrivacyCash.
+Native trading app for the Seeker device. Trade Bitcoin wrappers, stablecoins, and tokenized stocks with real-time fundamentals, Seeker-native fee tiers, and a path to on-chain revenue sharing.
 
-**Live on Solana Mainnet** · Built for [Privacy Hack 2026](https://solana.com/privacyhack)
+**Web Platform:** [solis-tokenized-markets.vercel.app](https://solis-tokenized-markets.vercel.app)
+**Web Repo:** [deFiFello/solis-icm-directory](https://github.com/deFiFello/solis-icm-directory)
 
 ---
 
 ## What It Does
 
-Solis gives you one place to discover, compare, swap, and privately trade tokenized assets on Solana.
+Solis turns your Seeker into a capital markets terminal. Self-custody, 24/7, no brokers, no banks, no market hours.
 
-**Discover** — 14 tokenized assets across 2 categories (BTC wrappers + stablecoins) with live market data, fear/greed index, BTC dominance, and stablecoin dominance metrics.
+**22 tokenized assets across 4 categories:**
+- **6 BTC Wrappers** — cbBTC, WBTC, zBTC, tBTC, xBTC, LBTC
+- **6 Stablecoins** — USDC, USDT, PYUSD, USD1, CASH, hyUSD
+- **9 Tokenized Stocks** — TSLAx, NVDAx, AAPLx, GOOGLx, AMZNx, MSFTx, METAx, MSTRx, COINx, SPYx, CRCLx
+- **1 Base Layer** — SOL
 
-**Compare** — Every asset has a detail page with 4 tabs: Markets (liquidity pools, DEX integrations), Holders (top 10, concentration), History (recent swaps, activity), and Metadata (custody model, audits, peg mechanism).
-
-**Swap** — Best-price routing via Jupiter across all 14 assets. Platform fee collected via Jupiter's `platformFeeBps` with smart ATA-based fee routing.
-
-**Shield** — Toggle Shield Mode to deposit swap output into a PrivacyCash privacy pool. Withdraw later to any wallet — a groth16 ZK proof generated in your browser breaks the on-chain link between deposit and withdrawal. No one can trace where the funds came from.
-
----
-
-## Demo
-
-📹 **[Demo Video (3 min)]** — *link coming*
+Every swap executes on Solana mainnet with real tokens.
 
 ---
 
-## Bounties Targeted
+## Features
 
-| Bounty | Category | Why |
-|--------|----------|-----|
-| **PrivacyCash** | Best Integration to Existing App | PrivacyCash SDK integrated into a full trading platform — shield deposit + ZK withdraw working on mainnet |
-| **PrivacyCash** | Best Overall App | Most complete PrivacyCash-powered application with swap + shield + withdraw flow |
-| **Helius** | Best Privacy Project with Helius | Helius RPC powers all token metadata, holder data, transaction history, and network calls |
-| **Open Track** | Pool Prize | Full trading platform that makes privacy a toggle inside the natural swap flow |
-| **Private Payments** | Track 01 | Shield swaps are private transfers — swap into privacy pool, withdraw to any address untraceably |
+### Mainnet Jupiter Swaps
+- Native swap execution via MWA (Mobile Wallet Adapter) + Seed Vault
+- Smart ATA fee routing — includes platform fee when possible, skips gracefully when not. Swaps never break.
+- Priority fees at 500K–1M lamports for reliable transaction landing
+- Full token selector with wallet balances and USD conversion
+
+### Seeker Integration
+
+**Genesis Token Detection** — On wallet connection, queries Token-2022 program for Seeker Genesis Token. Verified holders unlock Seeker Mode with reduced fees.
+
+**Fee Structure:**
+
+| User | Fee | Details |
+|------|-----|---------|
+| Standard | 0.50% | Default for all users |
+| Seeker Verified | **Free** up to $5K volume | First $5,000 in swap volume fee-waived |
+| Seeker Verified | 0.35% | After $5K threshold, permanent reduced rate |
+
+### Tokenized Stock Fundamentals
+Real equity data from Finnhub for all xStocks:
+- P/E Ratio (TTM), EPS (TTM), Beta (5Y), 52 Week Range
+- Day's Range with visual position indicator
+- Last Reported EPS with beat/miss and reporting period
+- Analyst Consensus (Buy/Hold/Sell distribution)
+- Peg Status — real stock price vs token price accuracy
+
+### Contextual Market Intelligence
+Different asset types show contextually appropriate metrics:
+- **xStocks**: DEX Volume + On-Chain Liquidity (not misleading market cap)
+- **BTC Wrappers**: On-Chain Volume + Wrapped TVL
+- **Stablecoins/Crypto**: Standard Volume + Market Cap
+
+Data from DexScreener, Jupiter V3, CoinGecko, Finnhub, and Pyth — fetched in parallel.
+
+### Asset Detail Pages
+2-tab layout (Markets + Info) for every asset:
+- Animated count-up numbers, sparkline bars from real pool data, top-pool highlight
+- Investor-grade descriptions with issuer, custody model, peg mechanism
+- Balanced Considerations — each risk paired with a factual mitigation (audits, regulatory status, insurance)
+- Mint address with Copy + Solscan actions
+
+### Shadow Swaps (ZK Privacy — Web)
+PrivacyCash integration on the web platform. groth16 ZK proofs generated in-browser via WASM circuits. Shield deposits break the on-chain link between sender and recipient. Mobile implementation pending — PrivacyCash SDK's Keypair requirement conflicts with MWA's secure enclave model.
+
+### Brand V2 Design System
+- #BDFF00 Solar Green accent, Inter + Space Grotesk typography
+- Sharp corners, flat black palette, purple reserved for Shadow branding
+- Dopamine triggers: count-up animations, live pulse dot, staggered entrance animations
+
+---
+
+## Revenue Model
+
+### Active Revenue (Live)
+
+| Stream | Fee | Status |
+|--------|-----|--------|
+| Standard Swaps | 0.50% | **Collecting** |
+| Seeker Verified (after $5K) | 0.35% | **Collecting** |
+| Seeker Verified (first $5K) | Free | **Active** |
+| Shadow Swaps (Web) | 0.75% | **Collecting** |
+
+**Fee wallet:** `EMp2t1K5Du4sQLA5v2YGKfCWjsLE2T5eNbhYjGGLRcLo`
+
+### Planned: On-Chain Revenue Sharing
+
+Solis is building toward a revenue sharing model where platform trading fees are deployed into DeFi yield strategies and a percentage of returns are distributed back to users.
+
+**Architecture (in design):**
+- **Triple-vault system** — GlobalState for protocol config, per-user volume tracking via PDAs, and a yield-generating vault supplied to lending protocols
+- **Yield generation** — Collected fees are supplied to established lending protocols to earn APY
+- **User rebates** — A percentage of vault returns distributed to users proportional to their platform activity
+- **Lazy claim model** — Users initiate on-chain withdrawal of their share, shifting gas costs to the claimant
+
+**Phased rollout:**
+- **Phase 1 (Current)** — Off-chain volume tracking. Fee collection via existing Jupiter integration. Treasury accumulation.
+- **Phase 2** — On-chain program deployment once treasury and volume thresholds justify the infrastructure cost (PDA rent, audit fees)
+- **Phase 3** — Automated snapshot triggers and claim functionality. Modular vault strategy supporting multiple lending protocols.
+
+The program will be built with audit readiness in mind — modular architecture, checked math, re-entrancy protection, and sharded PDAs to prevent account contention.
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Next.js 15, React, TypeScript |
-| Styling | Tailwind CSS, Space Mono |
-| Swaps | Jupiter API (v1 endpoint, `platformFeeBps`) |
-| RPC & Data | Helius (metadata, holders, transactions) |
-| Market Data | DexScreener (price, volume, liquidity) |
-| Privacy | PrivacyCash SDK (groth16 ZK proofs, WASM circuits) |
-| Wallet | Solana Wallet Adapter (Phantom, Solflare, etc.) |
-| Network | Solana Mainnet |
+| Component | Technology |
+|-----------|-----------|
+| Framework | React Native + Expo (SDK 54) |
+| Language | TypeScript |
+| Wallet | Mobile Wallet Adapter + Seed Vault |
+| Swaps | Jupiter API v1 |
+| Stock Data | Finnhub API |
+| Market Data | DexScreener, Jupiter V3, CoinGecko |
+| Macro Data | Pyth Network |
+| Privacy | PrivacyCash SDK (web) |
+| RPC | Helius |
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    SOLIS FRONTEND                    │
-│              Next.js 15 · Tailwind CSS              │
-├─────────────┬──────────────┬────────────────────────┤
-│  Homepage   │  Asset Pages │      Swap Page          │
-│  14 tokens  │  4-tab view  │  Standard + Shield      │
-│  Live data  │  Holders/Tx  │  Jupiter + PrivacyCash  │
-└──────┬──────┴──────┬───────┴────────┬───────────────┘
-       │             │                │
-       ▼             ▼                ▼
-┌──────────┐  ┌───────────┐  ┌───────────────────────┐
-│DexScreener│  │  Helius   │  │      Jupiter API      │
-│Price/Vol  │  │  RPC +    │  │  Quote → Swap → Fee   │
-│Liquidity  │  │  Metadata │  │  platformFeeBps: 50   │
-└───────────┘  └───────────┘  └───────────┬───────────┘
-                                          │
-                              ┌───────────▼───────────┐
-                              │    Shield Mode ON?    │
-                              │    ┌─────────────┐    │
-                              │    │ PrivacyCash  │    │
-                              │    │ ZK Deposit   │    │
-                              │    │ WASM Circuit  │    │
-                              │    └──────┬──────┘    │
-                              │           ▼           │
-                              │    Privacy Pool       │
-                              │    (on-chain)         │
-                              │           │           │
-                              │    ┌──────▼──────┐    │
-                              │    │ ZK Withdraw  │    │
-                              │    │ groth16 proof│    │
-                              │    │ → any wallet │    │
-                              │    └─────────────┘    │
-                              └───────────────────────┘
-```
-
----
-
-## Running Locally
-
-### Prerequisites
-- Node.js 18+
-- A Solana wallet (Phantom recommended)
-- SOL for gas fees
-
-### Setup
-
-```bash
-# Clone
-git clone https://github.com/deFiFello/solis-icm-directory.git
-cd solis-icm-directory
-
-# Install
-npm install
-
-# Copy WASM files for PrivacyCash ZK circuits
-mkdir -p public/circuit2
-cp node_modules/privacycash/circuit2/transaction2.wasm public/circuit2/
-cp node_modules/privacycash/circuit2/transaction2.zkey public/circuit2/
-
-# Environment variables
-cp .env.example .env.local
-# Edit .env.local with your API keys (see below)
-
-# Build & run
-npm run build
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
-
-### Environment Variables
-
-Create a `.env.local` file from `.env.example` and fill in your own keys:
-
-```
-NEXT_PUBLIC_JUPITER_API_KEY=     # Get at https://station.jup.ag
-NEXT_PUBLIC_HELIUS_API_KEY=      # Get at https://helius.dev
-NEXT_PUBLIC_FEE_WALLET=          # Your Solana wallet for fee collection
-```
-
----
-
-## Assets Supported (V1)
-
-### Tokenized Bitcoin (6)
-| Token | Custody | Custodian |
-|-------|---------|-----------|
-| cbBTC | Centralized | Coinbase |
-| WBTC | Centralized | BitGo |
-| zBTC | Decentralized | Zeus Network (MPC Guardians) |
-| tBTC | Decentralized | Threshold Network |
-| xBTC | Centralized | OKX |
-| LBTC | Centralized | Lombard |
-
-### Stablecoins (7)
-USDC · USDT · PYUSD (PayPal) · USD1 (World Liberty) · PRIME · CASH · hyUSD (Hylo)
-
-### Base Layer
-SOL
-
----
-
-## Fee Structure
-
-| Action | Fee | Notes |
-|--------|-----|-------|
-| Standard Swap | 0.5% | Jupiter `platformFeeBps` on output |
-| Shield Swap | 0.75% | Includes ZK proof computation |
-| Shield Withdraw | 0.35% + rent | Set by PrivacyCash protocol (~0.006 SOL or ~0.61 USDC rent per withdrawal) |
-
-Minimum withdrawal: 0.01 SOL / 2 USDC (enforced by PrivacyCash protocol).
-
-Smart fee routing avoids WSOL (native SOL ATAs don't persist). If the fee wallet's ATA doesn't exist for a token pair, the swap executes without fees as a fallback — swaps never break.
-
----
-
-## Privacy: How Shield Mode Works
-
-1. **Swap** — Jupiter executes the swap (e.g., USDC → SOL)
-2. **Deposit** — Output is deposited into the PrivacyCash privacy pool. A WASM circuit generates an encrypted UTXO commitment on-chain.
-3. **Withdraw** — User withdraws to any wallet address. A groth16 ZK proof is generated locally in the browser, proving ownership without revealing which deposit is being claimed.
-
-The zero-knowledge proof cryptographically breaks the on-chain link between the depositor and the withdrawal recipient. No one — not Solis, not an on-chain observer — can connect the two.
-
-Shield Mode is available for SOL and USDC output tokens.
-
----
-
-## Project Structure
-
-```
-src/
+solis-mobile/
 ├── app/
-│   ├── page.tsx              # Homepage — tabs, ticker, metrics
-│   ├── swap/page.tsx         # Swap page — Jupiter + Shield Mode
-│   ├── docs/page.tsx         # Documentation
-│   └── asset/[symbol]/       # Dynamic asset detail pages
-├── components/               # Shared UI (Header, MarketTicker, etc.)
+│   ├── (tabs)/
+│   │   ├── index.tsx            # Home (portfolio + ticker + holdings)
+│   │   ├── earn.tsx             # Yield opportunities
+│   │   ├── swap.tsx             # Native Jupiter swap
+│   │   └── more.tsx             # Links, fees, about
+│   ├── asset/[symbol].tsx       # Asset detail (Markets + Info)
+│   └── _layout.tsx              # Root layout
 ├── contexts/
-│   └── PrivacyCashContext.tsx # ZK privacy state management
+│   ├── WalletProvider.tsx       # MWA wallet + balances
+│   ├── SeekerProvider.tsx       # Genesis Token + fee tiers
+│   └── PortfolioProvider.tsx    # Portfolio aggregation
+├── services/
+│   ├── config.ts                # 22 assets, mints, API config
+│   ├── assetMetadata.ts         # Descriptions, risks, mitigations
+│   ├── finnhub.ts               # Stock fundamentals
+│   ├── jupiterPrice.ts          # Price feeds
+│   ├── dexScreener.ts           # Pool data
+│   └── macroData.ts             # Macro indicators
 ├── lib/
-│   ├── jupiter.ts            # Jupiter swap + smart fee routing
-│   └── privacycash-loader.ts # WASM circuit loading for ZK proofs
-└── services/
-    ├── config.ts             # Token mints, asset config
-    ├── heliusMetadata.ts     # Helius token metadata
-    ├── dexScreener.ts        # DexScreener market data
-    └── jupiterPrice.ts       # Jupiter price feeds
+│   ├── jupiterSwap.ts           # Swap execution + ATA fees
+│   ├── seekerDetection.ts       # Genesis Token scan
+│   └── feeTiers.ts              # Fee tier logic
+└── assets/tokens/               # Local token logos
 ```
-
----
-
-## Known Issues & Active Development
-
-This is the V1 hackathon submission. The platform is functional on mainnet but this is an actively evolving project. There are known enhancements in progress and you should expect frequent updates to aesthetics, functionality, and data coverage going forward.
-
-**Current known issues:**
-- Stablecoin asset pages not yet created (7 stablecoins need `/asset/[symbol]` detail pages)
-- Missing token logos for CASH, PRIME, hyUSD (Helius returns null — needs fallback URIs)
-- SOL market cap displays "--" (native token, not SPL — needs circulating supply source)
-- Withdraw UI needs minimum amount validation (0.01 SOL / 2 USDC per PrivacyCash protocol)
-- Yield tab shows "Coming Soon" (requires real protocol integrations with referral tracking)
-- Design, layout, and UX refinements ongoing
 
 ---
 
 ## Roadmap
 
-- **V1 (Live)** — 14 assets, Jupiter swaps, Shield Mode, asset pages
-- **V2** — Native BTC → zBTC bridging via Zeus BitcoinKit (free bridging as acquisition)
-- **V3** — Tokenized stocks, metals, commodities
-- **V4** — Real estate, fiat on-ramp, mobile app
+| Phase | Focus | Status |
+|-------|-------|--------|
+| **V1** | Web platform — 14 assets, Jupiter swaps, PrivacyCash ZK shielding | ✅ Shipped |
+| **V1.1** | Bug fixes — mobile responsive, RPC, WASM deployment, Shield Mode working | ✅ Shipped |
+| **V2 Mobile** | Native Seeker app — 22 assets, MWA swaps, Finnhub fundamentals, fee tiers | ✅ Current |
+| **V2.1** | Polish — onboarding flow, Earn screen content, xStock price feeds | 🔧 Next |
+| **V3** | Revenue sharing — on-chain vault, yield generation, user rebates | 📐 Designing |
+| **V4** | Tokenized metals (XAUT, PAXG), commodities, advanced charting | 📋 Planned |
+
+---
+
+## Setup
+
+```bash
+git clone https://github.com/deFiFello/solis-mobile.git
+cd solis-mobile
+npm install
+npx expo start
+```
+
+Requires Node.js 18+, Expo CLI. For Seeker device testing, use Expo Go or build a dev client via Android Studio.
+
+---
+
+## Known Limitations
+
+- Shadow Swaps are web-only — MWA security model prevents native PrivacyCash integration
+- CoinGecko free tier rate-limits extended market data on rapid navigation
+- Fee wallet needs ATAs for USDT, PYUSD, cbBTC, WBTC to collect fees on those outputs
+- Finnhub price-target endpoint is premium-only (analyst targets not shown)
 
 ---
 
 ## Team
 
-Solo founder + junior cybersecurity analyst
+**Chris** — Solo founder
 
 ---
 
