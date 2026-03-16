@@ -79,7 +79,7 @@ export const SOLIS_CONFIG = {
   JUPITER_PRICE_API: "https://api.jup.ag/price/v2",
   JUPITER_QUOTE_API: "https://api.jup.ag/swap/v1/quote",
   PYTH_PRICE_SERVICE: "https://hermes.pyth.network/v2/updates/price/latest",
-  FEE_WALLET: "EMp2t1K5Du4sQLA5v2YGKfCWjsLE2T5eNbhYjGGLRcLo",
+  FEE_WALLET: process.env.EXPO_PUBLIC_FEE_WALLET ?? "EMp2t1K5Du4sQLA5v2YGKfCWjsLE2T5eNbhYjGGLRcLo",
   PLATFORM_FEE_BPS: 50,
   SHADOW_FEE_BPS: 75,
 } as const;
