@@ -1,4 +1,12 @@
-// @ts-nocheck
+
+function requireEnv(key: string, value: string | undefined): string {
+  if (!value) {
+    console.error(`[Solis] Missing required env var: ${key}`);
+  }
+  return value ?? "";
+}
+
+
 // Token Mint Addresses - VERIFIED WORKING
 export const BTC_MINTS = {
   cbBTC: "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij",
@@ -72,9 +80,9 @@ export function getAssetBySymbol(symbol: string) {
 }
 
 export const SOLIS_CONFIG = {
-  JUPITER_API_KEY: process.env.EXPO_PUBLIC_JUPITER_API_KEY ?? "",
-  HELIUS_API_KEY: process.env.EXPO_PUBLIC_HELIUS_API_KEY ?? "",
-  HELIUS_RPC_URL: `https://mainnet.helius-rpc.com/?api-key=${process.env.EXPO_PUBLIC_HELIUS_API_KEY ?? ""}`,
+  JUPITER_API_KEY: requireEnv("EXPO_PUBLIC_JUPITER_API_KEY", process.env.EXPO_PUBLIC_JUPITER_API_KEY),
+  HELIUS_API_KEY: requireEnv("EXPO_PUBLIC_HELIUS_API_KEY", process.env.EXPO_PUBLIC_HELIUS_API_KEY),
+  HELIUS_RPC_URL: `https://mainnet.helius-rpc.com/?api-key=${requireEnv("EXPO_PUBLIC_HELIUS_API_KEY", process.env.EXPO_PUBLIC_HELIUS_API_KEY)}`,
   DEXSCREENER_API: "https://api.dexscreener.com/latest/dex",
   JUPITER_PRICE_API: "https://api.jup.ag/price/v2",
   JUPITER_QUOTE_API: "https://api.jup.ag/swap/v1/quote",
