@@ -6,7 +6,7 @@
 // Endpoints: /quote, /stock/metric, /stock/price-target,
 //            /stock/recommendation, /stock/earnings
 
-const FINNHUB_KEY = "d6mrev1r01qir35i68jgd6mrev1r01qir35i68k0";
+const FINNHUB_KEY = process.env.EXPO_PUBLIC_FINNHUB_API_KEY ?? "";
 const BASE = "https://finnhub.io/api/v1";
 
 // ─── Symbol Map: xStock symbol → real ticker ─────────────
