@@ -30,7 +30,7 @@ export async function getMarketData(
 ): Promise<MarketData | null> {
   try {
     const res = await fetch(
-      `${SOLIS_CONFIG.DEXSCREENER_API_URL}/tokens/${mint}`
+      `${SOLIS_CONFIG.DEXSCREENER_API}/tokens/${mint}`
     );
     if (!res.ok) return null;
 

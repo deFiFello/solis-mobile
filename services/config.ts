@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Token Mint Addresses - VERIFIED WORKING
 export const BTC_MINTS = {
   cbBTC: "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij",
